@@ -18,7 +18,7 @@ namespace Huff_n_Puff
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
+        KeyboardState oldKb = Keyboard.GetState();
         Texture2D sprite;
         Rectangle[] bobLRct = new Rectangle[5];
         Rectangle[] bobRRct = new Rectangle[5];
@@ -27,7 +27,7 @@ namespace Huff_n_Puff
         Rectangle fethrRct;
 
         Random fethrDirct = new Random(), fethrDist = new Random();
-
+        SpriteFont font1;
         bool gameInPlay = true;
         int playerState = 0, featherState = 0;
         int playerX, playerY;
@@ -36,6 +36,7 @@ namespace Huff_n_Puff
         int time = 0;
         int dirct;
         double dist;
+        int points = 0;
 
         public Game1()
         {
@@ -81,6 +82,7 @@ namespace Huff_n_Puff
 
             // TODO: use this.Content to load your game content here
             sprite = this.Content.Load<Texture2D>("HuffNPuff");
+            font1 = Content.Load<SpriteFont>("SpriteFont1");
         }
 
         /// <summary>
@@ -153,6 +155,9 @@ namespace Huff_n_Puff
                     playerY = GraphicsDevice.Viewport.Height - 117;
                     if (puffFeather())
                         featherY -= 1;
+                    if (kb.IsKeyDown(Keys.Space) && oldKb.IsKeyUp(Keys.Space)) {
+                        points++;
+                    }
                     else
                         featherY += 0.5;
                 }
@@ -181,7 +186,7 @@ namespace Huff_n_Puff
                 bobRct = new Rectangle(playerX, playerY, 75, 106);
                 fethrRct = new Rectangle((int)featherX, (int)featherY, 50, 50);
             }
-
+            oldKb = kb;
             base.Update(gameTime);
         }
 
@@ -208,6 +213,7 @@ namespace Huff_n_Puff
                 spriteBatch.Draw(sprite, bobRct, bobRRct[playerState], Color.White);
 
             spriteBatch.Draw(sprite, fethrRct, featherRct[featherState], Color.White);
+            spriteBatch.DrawString(font1,"Score:" + points,new Vector2(25,40),Color.White);
             spriteBatch.End();
             base.Draw(gameTime);
         }
